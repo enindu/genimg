@@ -16,6 +16,44 @@
 
 package main
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/enindu/genimg/commands/source"
+)
+
 func main() {
-	//
+	dispatchers := map[string]func([]string){
+		"source:local": source.Local,
+	}
+
+	inputs := os.Args
+
+	if len(inputs) < 2 {
+		fmt.Fprintf(os.Stderr, "%s\n", errNoInstruction.Error())
+		return
+	}
+
+	instruction := inputs[1]
+
+	switch instruction {
+	case "-v", "--version":
+		version()
+		return
+	case "-h", "--help":
+		help()
+		return
+	}
+
+	execute, exists := dispatchers[instruction]
+
+	if !exists {
+		fmt.Fprintf(os.Stderr, "%s\n", errInvalidCommand.Error())
+		return
+	}
+
+	arguments := inputs[2:]
+
+	execute(arguments)
 }
