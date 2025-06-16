@@ -16,52 +16,45 @@ package source
 
 import (
 	"fmt"
-	"image"
-	"image/color"
-	"image/png"
-	"math/rand"
+	"io"
+	"net/http"
 	"os"
-	"strconv"
 	"strings"
 )
 
-func Local(a []string) {
+func Picsum(a []string) {
 	if len(a) != 2 {
 		Help(a)
 		return
 	}
 
-	width, err := strconv.Atoi(a[0])
+	width := a[0]
+	height := a[1]
+
+	request, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://picsum.photos/%s/%s", width, height), nil)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
 		return
 	}
 
-	height, err := strconv.Atoi(a[1])
+	response, err := http.DefaultClient.Do(request)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
 		return
 	}
 
-	graphic := image.NewRGBA(image.Rect(0, 0, width, height))
-	fill := color.RGBA{R: uint8(rand.Int()), G: uint8(rand.Int()), B: uint8(rand.Int()), A: uint8(rand.Int())}
+	defer response.Body.Close()
 
-	for x := range width {
-		for y := range height {
-			graphic.SetRGBA(x, y, fill)
-		}
-	}
-
-	file, path, err := createFile("local.png")
+	file, path, err := createFile("picsum.jpg")
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
 		return
 	}
 
-	err = png.Encode(file, graphic)
+	_, err = io.Copy(file, response.Body)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))

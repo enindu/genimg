@@ -15,24 +15,24 @@
 package source
 
 import (
-	"fmt"
 	"os"
+	"path/filepath"
 )
 
-func Help(a []string) {
-	message := `Usage:
-	
-	genimg source:<subcommand> [arguments]
-	
-Available subcommands and arguments:
+func createFile(n string) (*os.File, string, error) {
+	home, err := os.UserHomeDir()
 
-	local [width] [height]  # Get random, static color image
-	picsum [width] [height] # Get random image from https://picsum.photos
-	help                    # View help message
-	
-Example:
+	if err != nil {
+		return nil, "", err
+	}
 
-	genimg source:local 200 200`
+	path := filepath.Join(home, n)
 
-	fmt.Fprintf(os.Stdout, "%s\n", message)
+	file, err := os.Create(path)
+
+	if err != nil {
+		return nil, "", err
+	}
+
+	return file, path, nil
 }

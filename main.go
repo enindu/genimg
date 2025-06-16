@@ -25,7 +25,8 @@ import (
 
 func main() {
 	dispatchers := map[string]func([]string){
-		"source:local": source.Local,
+		"source:local":  source.Local,
+		"source:picsum": source.Picsum,
 	}
 
 	inputs := os.Args
