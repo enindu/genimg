@@ -19,15 +19,16 @@ import (
 	"os"
 )
 
-func Help(a []string) {
+func help() {
 	message := `Usage:
 	
 	genimg source:<subcommand> [arguments]
 	
 Available subcommands and arguments:
 
-	local [width] [height]  # Get random, static color image
-	picsum [width] [height] # Get random image from https://picsum.photos
+	local [width] [height]  # Get a random, static color image
+	picsum [width] [height] # Get a random image from picsum.photos
+	nekos                   # Get a random image from nekosapi.com
 	help                    # View help message
 	
 Example:

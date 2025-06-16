@@ -15,9 +15,41 @@
 package source
 
 import (
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 )
+
+func saveFile(u string, n string) (string, error) {
+	request, err := http.NewRequest(http.MethodGet, u, nil)
+
+	if err != nil {
+		return "", err
+	}
+
+	response, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		return "", err
+	}
+
+	defer response.Body.Close()
+
+	file, path, err := createFile(n)
+
+	if err != nil {
+		return "", err
+	}
+
+	_, err = io.Copy(file, response.Body)
+
+	if err != nil {
+		return "", err
+	}
+
+	return path, nil
+}
 
 func createFile(n string) (*os.File, string, error) {
 	home, err := os.UserHomeDir()

@@ -16,45 +16,20 @@ package source
 
 import (
 	"fmt"
-	"io"
-	"net/http"
 	"os"
 	"strings"
 )
 
 func Picsum(a []string) {
 	if len(a) != 2 {
-		Help(a)
+		help()
 		return
 	}
 
 	width := a[0]
 	height := a[1]
 
-	request, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://picsum.photos/%s/%s", width, height), nil)
-
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	response, err := http.DefaultClient.Do(request)
-
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	defer response.Body.Close()
-
-	file, path, err := createFile("picsum.jpg")
-
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	_, err = io.Copy(file, response.Body)
+	path, err := saveFile(fmt.Sprintf("https://picsum.photos/%s/%s", width, height), "picsum.jpg")
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))

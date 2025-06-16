@@ -16,52 +16,17 @@ package source
 
 import (
 	"fmt"
-	"image"
-	"image/color"
-	"image/png"
-	"math/rand"
 	"os"
-	"strconv"
 	"strings"
 )
 
-func Local(a []string) {
-	if len(a) != 2 {
+func Nekos(a []string) {
+	if len(a) != 0 {
 		help()
 		return
 	}
 
-	width, err := strconv.Atoi(a[0])
-
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	height, err := strconv.Atoi(a[1])
-
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	graphic := image.NewRGBA(image.Rect(0, 0, width, height))
-	fill := color.RGBA{R: uint8(rand.Int()), G: uint8(rand.Int()), B: uint8(rand.Int()), A: uint8(rand.Int())}
-
-	for x := range width {
-		for y := range height {
-			graphic.SetRGBA(x, y, fill)
-		}
-	}
-
-	file, path, err := createFile("local.png")
-
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	err = png.Encode(file, graphic)
+	path, err := saveFile("https://api.nekosapi.com/v4/images/random/file", "nekos.webp")
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
