@@ -28,7 +28,6 @@ Available subcommands and arguments:
 
 	local [width] [height]  # Get a random, static color image
 	picsum [width] [height] # Get a random image from picsum.photos
-	nekos                   # Get a random image from nekosapi.com
 	help                    # View help message
 	
 Example:
