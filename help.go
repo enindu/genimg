@@ -31,8 +31,8 @@ Available commands:
 
 Available flags:
 
-	-v, --version # View version message
-	-h, --help    # View help message`
+	-v, --version # View version message.
+	-h, --help    # View help message.`
 
 	fmt.Fprintf(os.Stdout, "%s\n", message)
 }

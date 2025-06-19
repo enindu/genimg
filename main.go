@@ -27,6 +27,8 @@ func main() {
 	dispatchers := map[string]func([]string){
 		"source:local":  source.Local,
 		"source:picsum": source.Picsum,
+		"source:pexels": source.Pexels,
+		"source:help":   source.Help,
 	}
 
 	inputs := os.Args
@@ -48,7 +50,6 @@ func main() {
 	}
 
 	execute, exists := dispatchers[instruction]
-
 	if !exists {
 		fmt.Fprintf(os.Stderr, "%s\n", errInvalidCommand.Error())
 		return

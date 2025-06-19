@@ -14,26 +14,9 @@
 
 package source
 
-import (
-	"fmt"
-	"os"
+import "errors"
+
+var (
+	errInvalidWidth  error = errors.New("the width is invalid (integer, min 1)")
+	errInvalidHeight error = errors.New("the height is invalid (integer, min 1)")
 )
-
-func Help(a []string) {
-	message := `Usage:
-	
-	genimg source:<subcommand> [arguments]
-	
-Available subcommands and arguments:
-
-	local [width] [height]                  # Get a random, static color image.
-	picsum [width] [height]                 # Get a random image from "picsum.photos".
-	pexels [key] [width] [height] [keyword] # Get a random image from "pexels.com".
-	help                                    # View help message.
-
-Example:
-
-	genimg source:local 1920 1080`
-
-	fmt.Fprintf(os.Stdout, "%s\n", message)
-}

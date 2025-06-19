@@ -18,35 +18,53 @@ import (
 	"fmt"
 	"image"
 	"image/color"
-	"image/png"
+	"image/jpeg"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
 
 func Local(a []string) {
+	// Validate arguments and get parameters
 	if len(a) != 2 {
-		help()
+		Help(nil)
 		return
 	}
 
 	width, err := strconv.Atoi(a[0])
-
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
+		return
+	}
+
+	if width < 1 {
+		fmt.Fprintf(os.Stderr, "%s\n", errInvalidWidth.Error())
 		return
 	}
 
 	height, err := strconv.Atoi(a[1])
-
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
 		return
 	}
 
-	graphic := image.NewRGBA(image.Rect(0, 0, width, height))
-	fill := color.RGBA{R: uint8(rand.Int()), G: uint8(rand.Int()), B: uint8(rand.Int()), A: uint8(rand.Int())}
+	if height < 1 {
+		fmt.Fprintf(os.Stderr, "%s\n", errInvalidHeight.Error())
+		return
+	}
+
+	// Create graphic
+	rectangle := image.Rect(0, 0, width, height)
+	graphic := image.NewRGBA(rectangle)
+
+	fill := color.RGBA{
+		R: uint8(rand.Int()),
+		G: uint8(rand.Int()),
+		B: uint8(rand.Int()),
+		A: uint8(rand.Int()),
+	}
 
 	for x := range width {
 		for y := range height {
@@ -54,19 +72,28 @@ func Local(a []string) {
 		}
 	}
 
-	file, path, err := createFile("local.png")
-
+	// Create file
+	directory, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
 		return
 	}
 
-	err = png.Encode(file, graphic)
+	path := filepath.Join(directory, "local.jpg")
 
+	file, err := os.Create(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
 		return
 	}
 
+	// Encode graphic into the file
+	err = jpeg.Encode(file, graphic, nil)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
+		return
+	}
+
+	// Print message
 	fmt.Fprintf(os.Stdout, "Image saved in \"%s\"\n", path)
 }
