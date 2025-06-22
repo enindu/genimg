@@ -14,6 +14,23 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// genimg is a lightweight tool for generating random images at custom sizes.
+//
+// Usage:
+//
+//	genimg <command>:<subcommand> [arguments]
+//	genimg [flags]
+//
+// Available commands:
+//
+//	source
+//
+// Available flags:
+//
+//	-v, --version # View version message
+//	-h, --help    # View help message
+//
+// Use "genimg <command>:help" to see more information about commands.
 package main
 
 import (

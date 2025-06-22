@@ -32,7 +32,9 @@ Available commands:
 Available flags:
 
 	-v, --version # View version message.
-	-h, --help    # View help message.`
+	-h, --help    # View help message.
+	
+Use "genimg <command>:help" to see more information about commands.`
 
 	fmt.Fprintf(os.Stdout, "%s\n", message)
 }
