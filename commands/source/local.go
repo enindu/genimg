@@ -28,7 +28,7 @@ import (
 
 func Local(a []string) {
 	// Validate arguments and get parameters
-	if len(a) != 2 {
+	if len(a) != 3 {
 		Help(nil)
 		return
 	}
@@ -55,45 +55,59 @@ func Local(a []string) {
 		return
 	}
 
-	// Create graphic
-	rectangle := image.Rect(0, 0, width, height)
-	graphic := image.NewRGBA(rectangle)
-
-	fill := color.RGBA{
-		R: uint8(rand.Int()),
-		G: uint8(rand.Int()),
-		B: uint8(rand.Int()),
-		A: uint8(rand.Int()),
+	count, err := strconv.Atoi(a[2])
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
+		return
 	}
 
-	for x := range width {
-		for y := range height {
-			graphic.SetRGBA(x, y, fill)
+	if count < 1 {
+		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(errInvalidCount.Error()))
+		return
+	}
+
+	for i := range count {
+		// Create graphic
+		rectangle := image.Rect(0, 0, width, height)
+		graphic := image.NewRGBA(rectangle)
+
+		fill := color.RGBA{
+			R: uint8(rand.Intn(256)),
+			G: uint8(rand.Intn(256)),
+			B: uint8(rand.Intn(256)),
+			A: uint8(rand.Intn(256)),
 		}
+
+		for x := range width {
+			for y := range height {
+				graphic.SetRGBA(x, y, fill)
+			}
+		}
+
+		// Create file
+		directory, err := os.UserHomeDir()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
+			return
+		}
+
+		name := fmt.Sprintf("local-%d.jpg", i+1)
+		path := filepath.Join(directory, name)
+
+		file, err := os.Create(path)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
+			return
+		}
+
+		// Encode graphic into the file
+		err = jpeg.Encode(file, graphic, nil)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
+			return
+		}
+
+		// Print message
+		fmt.Fprintf(os.Stdout, "Image saved in \"%s\"\n", path)
 	}
-
-	// Create file
-	directory, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	path := filepath.Join(directory, "local.jpg")
-
-	file, err := os.Create(path)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	// Encode graphic into the file
-	err = jpeg.Encode(file, graphic, nil)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", strings.ToLower(err.Error()))
-		return
-	}
-
-	// Print message
-	fmt.Fprintf(os.Stdout, "Image saved in \"%s\"\n", path)
 }

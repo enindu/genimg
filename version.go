@@ -20,7 +20,7 @@ import (
 )
 
 func version() {
-	message := `genimg v1.0.1
+	message := `genimg v1.1.0
 Copyright (C) 2025 Enindu Alahapperuma
 Licensed under GNU GPL 3.0`
 

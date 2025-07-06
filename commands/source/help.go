@@ -26,7 +26,7 @@ func Help(a []string) {
 	
 Available subcommands and arguments:
 
-	local [width] [height]                  # Get a random, static color image.
+	local [width] [height] [count]          # Get random, static color images.
 	picsum [width] [height]                 # Get a random image from "picsum.photos".
 	pexels [key] [width] [height] [keyword] # Get a random image from "pexels.com".
 	help                                    # View help message.

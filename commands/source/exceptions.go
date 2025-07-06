@@ -19,4 +19,5 @@ import "errors"
 var (
 	errInvalidWidth  error = errors.New("the width is invalid (integer, min 1)")
 	errInvalidHeight error = errors.New("the height is invalid (integer, min 1)")
+	errInvalidCount  error = errors.New("the count is invalid (integer, min 1)")
 )
